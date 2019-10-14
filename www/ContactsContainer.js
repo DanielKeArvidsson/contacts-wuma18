@@ -3,14 +3,16 @@ class ContactsContainer{
         this.createDiv()
     }
     createDiv(){
-    console.log(this)
-    let body = document.querySelector('body');
+    let main = document.querySelector('main');
     let contactContainer = document.createElement('div');
     contactContainer.innerHTML = '';
     contactContainer.setAttribute('class', 'container')
-    body.append(contactContainer);
-    store.first = {name: "assadf", phone: ["07477222", "02029444"], email: ["asd@asd.com"]}
-    console.log(store.save())
+    main.append(contactContainer);
+    store.save();
+    
+    for(let contact of store.contacts){
+        new Contact(contact)
+    }
 }
 }
 new ContactsContainer()

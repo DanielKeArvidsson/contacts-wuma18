@@ -9,12 +9,12 @@ catch(e){
 store.save = function(){
   localStorage.store = JSON.stringify(this);
 };
-if(!store.admin){
+if(!store.contacts){
     // This should only run once
     // because on next page load there should
     // be a saved admin in the store
-    console.log('Creating admin');
-    store.admin = {name: 'Tom', status: 'superadmin'};
+    console.log('Creating contacts container');
+    store.contacts = []
     store.save();
   }
    
