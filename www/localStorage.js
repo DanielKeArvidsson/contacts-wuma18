@@ -17,5 +17,3 @@ if(!store.contacts){
     store.contacts = []
     store.save();
   }
-   
-  console.log(store)

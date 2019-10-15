@@ -24,12 +24,9 @@ const [listen, unlisten] = (() => {
       }
       return listener;
     }
-   
     function unlisten(listener){
       listeners.splice(listeners.indexOf(listener), 1);
     }
    
     return [listen, unlisten];
-   
   })();
-   
