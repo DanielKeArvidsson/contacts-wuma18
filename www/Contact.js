@@ -23,22 +23,13 @@ class Contact{
         let email = document.createElement('p')
         email.innerHTML = this.contact.email.join(', ')
         card.append(name, phone, email,removeBtn, editBtn)
-        if(main.classList.contains("contact")){
-            container.append(card)
-        }
-        else if(main.classList.contains("editContact")){
-            let contactNow = document.createElement('p')
-            contactNow.innerHTML = "Contact before edit"
-            card.prepend(contactNow)
-            let editContainer = document.querySelector('.editContainer')
-            editContainer.append(card)
-        }
+        container && container.append(card)
+       
         editBtn.addEventListener('click', e => {
             e.preventDefault()
             let link = ('/edit/' + this.contact.timeStamp)
             history.pushState(null, null, link);
-            main.classList.remove('contact')
-            new EditContact()
+            reactOnRoute();
         })
         removeBtn.addEventListener('click', e => {
             console.log(e.target.value)

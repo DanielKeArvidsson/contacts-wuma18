@@ -6,12 +6,10 @@ class EditContact{
        let contactFromUrl = store.contacts.find( ({ timeStamp }) => timeStamp == location.pathname.split("/").pop() );
        /* let link = ('/edit/' + this.contact.timeStamp)
         history.pushState(null, null, link); // change url (no reload)*/
-        console.log(contactFromUrl)
         let main = document.querySelector('main')
         let editContainer = document.createElement('div')
         editContainer.setAttribute('class','editContainer')
         main.append(editContainer)
-        main.classList.remove('contact')
         main.classList.add('editContact')
         let editContactForm = document.createElement('form');
         let editContactSubmitBtn = document.createElement('button');
@@ -40,6 +38,36 @@ class EditContact{
         editContactForm.prepend(editContactSubmitBtn)
         editContactForm.prepend(editContactHeader)
         editContainer.prepend(editContactForm);
-        new Contact(store.contacts[0])
+        
+        for(let i in contactFromUrl){
+            console.log(contactFromUrl)
+            console.log(store.contacts)
+            console.log(i)
+            console.log(i == "history")
+            if(i == "history"){
+                for(let contact in contactFromUrl[i]){
+                    console.log(contactFromUrl[i][contact])
+                    new HistoryContact(contactFromUrl[i][contact])
+                }
+            }
+
+        }
+
+        let editContact = listen('click', '.editContactSubmitBtn', e => {
+            console.log(contactFromUrl)
+            const time = Date.now()
+            let historyContact = {
+                name: editContactInputName.value,
+                email: editContactInputEmail.value.split(",").map(item => item.trim()),
+                phone: editContactInputPhone.value.split(",").map(item => item.trim()),
+                timeStamp: time
+            }
+            contactFromUrl.name = editContactInputName.value
+            contactFromUrl.email = editContactInputEmail.value.split(",").map(item => item.trim())
+            contactFromUrl.phone = editContactInputPhone.value.split(",").map(item => item.trim())
+            contactFromUrl.history.unshift(historyContact)
+            store.save()
+            new HistoryContact(historyContact)
+          });
     }
 }

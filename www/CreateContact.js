@@ -3,7 +3,9 @@ class CreateContact{
         this.init()
     }
 
-    init(){    
+    init(){
+    if(window.location.href.indexOf("/edit/") != -1){return}
+
     let container = document.querySelector('.container');
     let createContactForm = document.createElement('form');
     let createContactSubmitBtn = document.createElement('button');
@@ -33,19 +35,25 @@ class CreateContact{
     createContactForm.prepend(createContactHeader)
     container.prepend(createContactForm);
     let createNew = listen('click', '.createContactSubmitBtn', e => {
+        const time = Date.now()
         let newContact = {
             name: createContactInputName.value,
             email: createContactInputEmail.value.split(",").map(item => item.trim()),
             phone: createContactInputPhone.value.split(",").map(item => item.trim()),
-            timeStamp: Date.now(),
-            history: []
+            timeStamp: time,
+            history: [{
+                name:createContactInputName.value,
+                email: createContactInputEmail.value.split(",").map(item => item.trim()),
+                phone: createContactInputPhone.value.split(",").map(item => item.trim()),
+                timeStamp: time
+              }]
         }
         store.contacts.push(newContact)
         store.save()
         new Contact(newContact)
       });
+    }
 
 }
 
-}
 new CreateContact()

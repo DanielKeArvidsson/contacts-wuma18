@@ -16,3 +16,17 @@ main:not(.contact) .container {
 main:not(.editContact) .editContainer {
     display: none;
 }
+
+.container {
+    display: none
+}
+.editContainer {
+    display: none
+}
+
+main.contact .container {
+    display: block;
+}
+main.editContact .editContainer {
+    display: block;
+}
