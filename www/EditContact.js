@@ -2,14 +2,74 @@ class EditContact{
     constructor(){
         this.getSpecific()
     }
+    addHistoryContactInfo(contactFromUrl){
+        for(let i in contactFromUrl){
+            if(i == "history"){
+                //contactFromUrl.timeStamp = contactFromUrl[0]
+                for(let contact in contactFromUrl[i]){
+                    //console.log(contactFromUrl[i][contact])
+                    new HistoryContact(contactFromUrl[i][contact])
+                }
+            }
+            
+        }
+    }
+    setContactToThis(contactFromUrl,theHistoryContact){
+        const time = Date.now()
+        console.log(contactFromUrl)
+        console.log(theHistoryContact)
+        let historyContact = {
+            name: theHistoryContact.name,
+            email: theHistoryContact.email.split(",").map(item => item.trim()),
+            phone: theHistoryContact.phone.split(",").map(item => item.trim()),
+            timeStamp: time
+        }
+        contactFromUrl.name = theHistoryContact.name
+        contactFromUrl.email = theHistoryContact.email.split(",").map(item => item.trim())
+        contactFromUrl.phone = theHistoryContact.phone.split(",").map(item => item.trim())
+        contactFromUrl.history.unshift(historyContact)
+        console.log(contactFromUrl.timeStamp)
+        store.save()
+        let historyContainer = document.querySelector('.historyContainer')
+        historyContainer.innerHTML = ""
+        this.addHistoryContactInfo(contactFromUrl)
+        console.log(store)
+    }
+    updateInfoFromBtn(contactFromUrl){
+        const time = Date.now()
+        let phone = document.querySelector('.editContactInputPhone')
+        let name = document.querySelector('.editContactInputName')
+        let email = document.querySelector('.editContactInputEmail')
+
+        let historyContact = {
+            name: name.value,
+            email: email.value.split(",").map(item => item.trim()),
+            phone: phone.value.split(",").map(item => item.trim()),
+            timeStamp: time
+        }
+        contactFromUrl.name = name.value
+        contactFromUrl.email = email.value.split(",").map(item => item.trim())
+        contactFromUrl.phone = phone.value.split(",").map(item => item.trim())
+        contactFromUrl.history.unshift(historyContact)
+        console.log(contactFromUrl.timeStamp)
+        store.save()
+        let historyContainer = document.querySelector('.historyContainer')
+        historyContainer.innerHTML = ""
+        this.addHistoryContactInfo(contactFromUrl)
+        console.log(store)
+    }
     getSpecific(){
-       let contactFromUrl = store.contacts.find( ({ timeStamp }) => timeStamp == location.pathname.split("/").pop() );
-       /* let link = ('/edit/' + this.contact.timeStamp)
-        history.pushState(null, null, link); // change url (no reload)*/
+        let contactFromUrl = store.contacts.find( ({ timeStamp }) => timeStamp == location.pathname.split("/").pop() );
+        let inputDiv = document.createElement('div')
+        inputDiv.classList.add('inputDiv')
         let main = document.querySelector('main')
         let editContainer = document.createElement('div')
+        let historyContainer = document.createElement('div')
+        historyContainer.classList.add('historyContainer')
         editContainer.setAttribute('class','editContainer')
         main.append(editContainer)
+        editContainer.append(inputDiv)
+        editContainer.append(historyContainer)
         main.classList.add('editContact')
         let editContactForm = document.createElement('form');
         let editContactSubmitBtn = document.createElement('button');
@@ -31,43 +91,60 @@ class EditContact{
         editContactInputPhone.setAttribute('placeholder', 'Telefon, "," mellan för flera')
         editContactInputEmail.setAttribute('class', 'editContactInputEmail')
         editContactInputEmail.setAttribute('placeholder', 'Email, "," mellan för flera')
-
-        editContactForm.prepend(editContactInputName)
-        editContactForm.prepend(editContactInputPhone)
-        editContactForm.prepend(editContactInputEmail)
-        editContactForm.prepend(editContactSubmitBtn)
-        editContactForm.prepend(editContactHeader)
-        editContainer.prepend(editContactForm);
-        
-        for(let i in contactFromUrl){
-            console.log(contactFromUrl)
-            console.log(store.contacts)
-            console.log(i)
-            console.log(i == "history")
-            if(i == "history"){
-                for(let contact in contactFromUrl[i]){
-                    console.log(contactFromUrl[i][contact])
-                    new HistoryContact(contactFromUrl[i][contact])
-                }
-            }
-
+        if(!document.querySelector('.editContactSubmitBtn')){
+            editContactForm.prepend(editContactInputName)
+            editContactForm.prepend(editContactInputPhone)
+            editContactForm.prepend(editContactInputEmail)
+            editContactForm.prepend(editContactSubmitBtn)
+            editContactForm.prepend(editContactHeader)
+            inputDiv.append(editContactForm);
+        }
+        if(!document.querySelector('.updateBtn')){
+           this.addHistoryContactInfo(contactFromUrl)
         }
 
         let editContact = listen('click', '.editContactSubmitBtn', e => {
-            console.log(contactFromUrl)
-            const time = Date.now()
-            let historyContact = {
-                name: editContactInputName.value,
-                email: editContactInputEmail.value.split(",").map(item => item.trim()),
-                phone: editContactInputPhone.value.split(",").map(item => item.trim()),
-                timeStamp: time
-            }
-            contactFromUrl.name = editContactInputName.value
-            contactFromUrl.email = editContactInputEmail.value.split(",").map(item => item.trim())
-            contactFromUrl.phone = editContactInputPhone.value.split(",").map(item => item.trim())
-            contactFromUrl.history.unshift(historyContact)
-            store.save()
-            new HistoryContact(historyContact)
+            this.updateInfoFromBtn(contactFromUrl)
           });
+        let updateBtn = listen('click','.updateBtn', e => {
+            console.log(e.target.value)
+            for(let i in contactFromUrl){
+                console.log(i)
+                if(i == "history"){
+                    for(let contact in contactFromUrl[i]){
+                        if(contactFromUrl[i][contact].timeStamp == e.target.value){
+                            let theHistoryContact = contactFromUrl[i][contact]
+                            //this.setContactToThis(contactFromUrl, ...theHistoryContact.email, ...theHistoryContact.phone,theHistoryContact.name)
+                            console.log(contactFromUrl)
+                            const time = Date.now()
+                            console.log(contactFromUrl)
+                           
+                            let historyContact = {
+                                name: theHistoryContact.name,
+                                email: theHistoryContact.email,
+                                phone: theHistoryContact.phone,
+                                timeStamp: time
+                            }
+                            for(let phone of theHistoryContact.phone){
+                                console.log(phone)
+                            }
+                            theHistoryContact.forEach(item => console.log(item));
+
+                            contactFromUrl.name = theHistoryContact.name
+                            contactFromUrl.email = theHistoryContact.email
+                            contactFromUrl.phone = theHistoryContact.phone
+                            contactFromUrl.history.unshift(historyContact)
+                            console.log(contactFromUrl.timeStamp)
+                            store.save()
+                            let historyContainer = document.querySelector('.historyContainer')
+                            historyContainer.innerHTML = ""
+                            this.addHistoryContactInfo(contactFromUrl)
+                            console.log(store)
+                        }
+                    }
+                }
+                
+            }
+        })
     }
 }

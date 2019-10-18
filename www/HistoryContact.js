@@ -5,11 +5,11 @@ class HistoryContact{
     }
     showContacts(){
     let main = document.querySelector('main')
+    let historyContainer = document.querySelector('.historyContainer')
     let updateBtn = document.createElement('button')
     updateBtn.setAttribute('class','updateBtn')
     updateBtn.setAttribute('value', this.contact.timeStamp)
     updateBtn.innerHTML = 'Set to this'
-    let editContainer = document.querySelector('.editContainer')
     let card = document.createElement('div')
     let time = document.createElement('p')
     time.innerHTML = new Date(this.contact.timeStamp).toLocaleString("sv-se")
@@ -20,7 +20,8 @@ class HistoryContact{
     let email = document.createElement('p')
     email.innerHTML = this.contact.email.join(', ')
     card.append(time,name, phone, email, updateBtn)
-    editContainer && editContainer.append(card)
+    historyContainer && historyContainer.append(card)
+
     }
 
 
