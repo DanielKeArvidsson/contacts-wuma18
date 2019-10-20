@@ -13,7 +13,6 @@ if(!store.contacts){
     // This should only run once
     // because on next page load there should
     // be a saved admin in the store
-    console.log('Creating contacts container');
     store.contacts = []
     store.save();
   }

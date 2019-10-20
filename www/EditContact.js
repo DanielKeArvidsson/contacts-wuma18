@@ -24,7 +24,6 @@ class EditContact{
         contactFromUrl.email = [...theHistoryContact.email]
         contactFromUrl.phone = [...theHistoryContact.phone]
         contactFromUrl.history.unshift(historyContact)
-        console.log(contactFromUrl.timeStamp)
         store.save()
         let historyContainer = document.querySelector('.historyContainer')
         historyContainer.innerHTML = ""
@@ -53,7 +52,6 @@ class EditContact{
         let historyContainer = document.querySelector('.historyContainer')
         historyContainer.innerHTML = ""
         this.addHistoryContactInfo(contactFromUrl)
-        console.log(store)
     }
     getSpecific(){
         let contactFromUrl = store.contacts.find( ({ timeStamp }) => timeStamp == location.pathname.split("/").pop() );
@@ -92,8 +90,8 @@ class EditContact{
         editContactInputEmail.setAttribute('placeholder', 'E-mail, "," in between each')
         if(!document.querySelector('.editContactSubmitBtn')){
             editContactForm.prepend(editContactSubmitBtn)
-            editContactForm.prepend(editContactInputPhone)
             editContactForm.prepend(editContactInputEmail)
+            editContactForm.prepend(editContactInputPhone)
             editContactForm.prepend(editContactInputName)
             editContactForm.prepend(editContactHeader)
             inputDiv.append(editContactForm);
@@ -107,14 +105,10 @@ class EditContact{
             this.updateInfoFromInput(contactFromUrl)
           });
         let updateBtn =listen('click','.updateBtn', e => {
-            console.log(e.target.value)
-            console.log(contactFromUrl.history)
             if(contactFromUrl && contactFromUrl.history){
                 for(let i in contactFromUrl.history){
                     if(contactFromUrl.history[i].timeStamp == e.target.value){
-                        console.log(contactFromUrl.history[i])
                         let theHistoryContact = contactFromUrl.history[i]
-                        console.log(contactFromUrl)
                         this.setContactToThis(theHistoryContact,contactFromUrl)
                         break;
                     }

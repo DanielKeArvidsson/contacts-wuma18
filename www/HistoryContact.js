@@ -12,13 +12,13 @@ class HistoryContact{
     updateBtn.innerHTML = 'Set to this'
     let card = document.createElement('div')
     let time = document.createElement('p')
-    time.innerHTML = new Date(this.contact.timeStamp).toLocaleString("sv-se")
+    time.innerHTML = "Date: " + new Date(this.contact.timeStamp).toLocaleString("sv-se")
     let name = document.createElement('p')
-    name.innerHTML = this.contact.name;
+    name.innerHTML = "Name: " + this.contact.name;
     let phone = document.createElement('p')
-    phone.innerHTML = this.contact.phone.join(', ')
+    phone.innerHTML = "Phone: " + this.contact.phone.join(', ')
     let email = document.createElement('p')
-    email.innerHTML = this.contact.email.join(', ')
+    email.innerHTML = "E-mail: " +  this.contact.email.join(', ')
     card.append(time,name, phone, email, updateBtn)
     historyContainer && historyContainer.append(card)
 

@@ -17,13 +17,13 @@ class Contact{
         let container = document.querySelector('.container')
         let card = document.createElement('div')
         let name = document.createElement('p')
-        name.innerHTML = this.contact.name;
+        name.innerHTML = "Name: " +  this.contact.name;
         let phone = document.createElement('p')
-        phone.innerHTML = this.contact.phone.join(', ')
+        phone.innerHTML = "Phone: " + this.contact.phone.join(', ')
         let email = document.createElement('p')
-        email.innerHTML = this.contact.email.join(', ')
+        email.innerHTML = "E-mail: " + this.contact.email.join(', ')
         card.append(name, phone, email,removeBtn, editBtn)
-        container && container.append(card)
+        container && container.prepend(card)
        
         editBtn.addEventListener('click', e => {
             e.preventDefault()
@@ -32,7 +32,6 @@ class Contact{
             reactOnRoute();
         })
         removeBtn.addEventListener('click', e => {
-            console.log(e.target.value)
             card.classList.add('hidden')
             store.contacts = store.contacts.filter(contact => contact.timeStamp != e.target.value );
             store.save()

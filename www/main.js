@@ -18,19 +18,16 @@ else{
   // On page load
 
   function reactOnRoute(){
-    console.log("reacting on", location.pathname)
     let main = document.querySelector('main')
 
     if(location.pathname.includes('/edit/')){
       main.classList.remove('contact')
-      console.log(main.classList)
       if(!main.classList.contains('editContact')){
 
         new EditContact()
       }
     }
     else {
-      console.log(main)
       main.classList.remove('editContact')
       main.classList.add('contact')
     }
