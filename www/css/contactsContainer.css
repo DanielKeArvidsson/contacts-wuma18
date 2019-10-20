@@ -1,0 +1,54 @@
+.container{
+    height: 100vh;
+    width: 100vw;
+}
+.editContainer{
+    height: 100vh;
+    width: 100vw;
+}
+.hidden{
+    display: none;
+}
+
+main:not(.contact) .container {
+    display: none;
+}
+main:not(.editContact) .editContainer {
+    display: none;
+}
+main:not(.editContact) .inputFields {
+    display: none;
+}
+
+.container {
+    display: none
+}
+.editContainer {
+    display: none
+}
+.inputFields{
+    display: none
+}
+
+main.contact .inputFields {
+    display: block;
+}
+main.contact .container {
+    display: block;
+}
+main.editContact .editContainer {
+    display: block;
+}
+main {
+    text-align: center;
+}
+input{
+    width: 80%;
+}
+.createContactSubmitBtn{
+    width: 30%;
+}
+.editContactSubmitBtn{
+    width: 30%
+}
+
