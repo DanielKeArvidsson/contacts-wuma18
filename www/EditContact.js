@@ -5,37 +5,32 @@ class EditContact{
     addHistoryContactInfo(contactFromUrl){
         for(let i in contactFromUrl){
             if(i == "history"){
-                //contactFromUrl.timeStamp = contactFromUrl[0]
                 for(let contact in contactFromUrl[i]){
-                    //console.log(contactFromUrl[i][contact])
                     new HistoryContact(contactFromUrl[i][contact])
                 }
             }
             
         }
     }
-    setContactToThis(contactFromUrl,theHistoryContact){
+    setContactToThis(theHistoryContact, contactFromUrl){
         const time = Date.now()
-        console.log(contactFromUrl)
-        console.log(theHistoryContact)
         let historyContact = {
             name: theHistoryContact.name,
-            email: theHistoryContact.email.split(",").map(item => item.trim()),
-            phone: theHistoryContact.phone.split(",").map(item => item.trim()),
+            email: [...theHistoryContact.email],
+            phone: [...theHistoryContact.phone],
             timeStamp: time
         }
         contactFromUrl.name = theHistoryContact.name
-        contactFromUrl.email = theHistoryContact.email.split(",").map(item => item.trim())
-        contactFromUrl.phone = theHistoryContact.phone.split(",").map(item => item.trim())
+        contactFromUrl.email = [...theHistoryContact.email]
+        contactFromUrl.phone = [...theHistoryContact.phone]
         contactFromUrl.history.unshift(historyContact)
         console.log(contactFromUrl.timeStamp)
         store.save()
         let historyContainer = document.querySelector('.historyContainer')
         historyContainer.innerHTML = ""
         this.addHistoryContactInfo(contactFromUrl)
-        console.log(store)
     }
-    updateInfoFromBtn(contactFromUrl){
+    updateInfoFromInput(contactFromUrl){
         const time = Date.now()
         let phone = document.querySelector('.editContactInputPhone')
         let name = document.querySelector('.editContactInputName')
@@ -51,8 +46,10 @@ class EditContact{
         contactFromUrl.email = email.value.split(",").map(item => item.trim())
         contactFromUrl.phone = phone.value.split(",").map(item => item.trim())
         contactFromUrl.history.unshift(historyContact)
-        console.log(contactFromUrl.timeStamp)
         store.save()
+        phone.value = "";
+        name.value = "";
+        email.value = "";
         let historyContainer = document.querySelector('.historyContainer')
         historyContainer.innerHTML = ""
         this.addHistoryContactInfo(contactFromUrl)
@@ -74,76 +71,54 @@ class EditContact{
         let editContactForm = document.createElement('form');
         let editContactSubmitBtn = document.createElement('button');
         let editContactHeader = document.createElement('h2')
-        editContactHeader.innerHTML = 'Uppdatera kontakt'
+        editContactHeader.innerHTML = 'Update contact'
         editContactSubmitBtn.setAttribute('type', 'button')
-        editContactSubmitBtn.innerHTML = 'Lägg till'
+        editContactSubmitBtn.innerHTML = 'Update'
         editContactSubmitBtn.setAttribute('class', 'editContactSubmitBtn')
         editContactForm.setAttribute('class', 'inputContainer')
         let editContactInputName = document.createElement('input')
         let editContactInputEmail = document.createElement('input')
         let editContactInputPhone = document.createElement('input')
+        let editContactInfoHeader = document.createElement('h2')
+        editContactInfoHeader.innerHTML = "Editing history, latest edit i current"
         editContactInputName.setAttribute('type','text')
         editContactInputEmail.setAttribute('type','text')
         editContactInputPhone.setAttribute('type','text')
         editContactInputName.setAttribute('class', 'editContactInputName')
-        editContactInputName.setAttribute('placeholder', 'Namn')
+        editContactInputName.setAttribute('placeholder', 'Name')
         editContactInputPhone.setAttribute('class', 'editContactInputPhone')
-        editContactInputPhone.setAttribute('placeholder', 'Telefon, "," mellan för flera')
+        editContactInputPhone.setAttribute('placeholder', 'Phone, "," in between each')
         editContactInputEmail.setAttribute('class', 'editContactInputEmail')
-        editContactInputEmail.setAttribute('placeholder', 'Email, "," mellan för flera')
+        editContactInputEmail.setAttribute('placeholder', 'E-mail, "," in between each')
         if(!document.querySelector('.editContactSubmitBtn')){
-            editContactForm.prepend(editContactInputName)
+            editContactForm.prepend(editContactSubmitBtn)
             editContactForm.prepend(editContactInputPhone)
             editContactForm.prepend(editContactInputEmail)
-            editContactForm.prepend(editContactSubmitBtn)
+            editContactForm.prepend(editContactInputName)
             editContactForm.prepend(editContactHeader)
             inputDiv.append(editContactForm);
+            inputDiv.append(editContactInfoHeader)
         }
         if(!document.querySelector('.updateBtn')){
            this.addHistoryContactInfo(contactFromUrl)
         }
 
         let editContact = listen('click', '.editContactSubmitBtn', e => {
-            this.updateInfoFromBtn(contactFromUrl)
+            this.updateInfoFromInput(contactFromUrl)
           });
-        let updateBtn = listen('click','.updateBtn', e => {
+        let updateBtn =listen('click','.updateBtn', e => {
             console.log(e.target.value)
-            for(let i in contactFromUrl){
-                console.log(i)
-                if(i == "history"){
-                    for(let contact in contactFromUrl[i]){
-                        if(contactFromUrl[i][contact].timeStamp == e.target.value){
-                            let theHistoryContact = contactFromUrl[i][contact]
-                            //this.setContactToThis(contactFromUrl, ...theHistoryContact.email, ...theHistoryContact.phone,theHistoryContact.name)
-                            console.log(contactFromUrl)
-                            const time = Date.now()
-                            console.log(contactFromUrl)
-                           
-                            let historyContact = {
-                                name: theHistoryContact.name,
-                                email: theHistoryContact.email,
-                                phone: theHistoryContact.phone,
-                                timeStamp: time
-                            }
-                            for(let phone of theHistoryContact.phone){
-                                console.log(phone)
-                            }
-                            theHistoryContact.forEach(item => console.log(item));
-
-                            contactFromUrl.name = theHistoryContact.name
-                            contactFromUrl.email = theHistoryContact.email
-                            contactFromUrl.phone = theHistoryContact.phone
-                            contactFromUrl.history.unshift(historyContact)
-                            console.log(contactFromUrl.timeStamp)
-                            store.save()
-                            let historyContainer = document.querySelector('.historyContainer')
-                            historyContainer.innerHTML = ""
-                            this.addHistoryContactInfo(contactFromUrl)
-                            console.log(store)
-                        }
+            console.log(contactFromUrl.history)
+            if(contactFromUrl && contactFromUrl.history){
+                for(let i in contactFromUrl.history){
+                    if(contactFromUrl.history[i].timeStamp == e.target.value){
+                        console.log(contactFromUrl.history[i])
+                        let theHistoryContact = contactFromUrl.history[i]
+                        console.log(contactFromUrl)
+                        this.setContactToThis(theHistoryContact,contactFromUrl)
+                        break;
                     }
                 }
-                
             }
         })
     }
